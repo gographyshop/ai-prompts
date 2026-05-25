@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 圖片指令集 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FDF8F2; --milk: #FAF3E8; --latte: #EDE0CC; --mocha: #C8A882;
+      --dusty: #E8C5B8; --blush: #F2D9D0; --sage: #C5D5C0; --lavender: #D8D0E8;
+      --text: #5C4A3A; --textLight: #8B7355; --white: #FFFCF8;
+      --gptG: #A8C5A0; --gemB: #A8BDD8; --gptD: #5A8A52; --gemD: #4A6B8A;
+      --border: #E5D5C0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--cream) 0%, var(--milk) 40%, var(--blush) 100%);
+      font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+      color: var(--text);
+      padding-bottom: 60px;
+    }
+
+    /* ── hero ── */
+    .hero {
+      background: linear-gradient(160deg, var(--latte) 0%, var(--dusty) 60%, var(--blush) 100%);
+      padding: 48px 24px 36px;
+      text-align: center;
+      border-bottom: 2px solid #C8A88230;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-deco {
+      position: absolute; border-radius: 50%; opacity: 0.18; pointer-events: none;
+    }
+    .hero h1 { font-size: clamp(26px, 6vw, 42px); font-weight: 800; line-height: 1.2; }
+    .hero p  { font-size: clamp(13px, 3vw, 16px); color: var(--textLight); margin-top: 10px; font-weight: 600; }
+    .hero .count { font-size: 12px; color: var(--mocha); margin-top: 6px; font-weight: 600; }
+    .deco1 { width:220px; height:220px; background:var(--dusty); top:-80px; left:-60px; }
+    .deco2 { width:160px; height:160px; background:var(--lavender); bottom:-50px; right:-40px; }
+
+    /* ── container ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+
+    /* ── filter bar ── */
+    .filter-bar {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin: 24px 0 6px;
+    }
+    .filter-btn {
+      padding: 7px 18px; border-radius: 20px; border: 2px solid; font-weight: 700;
+      font-size: 13px; cursor: pointer; font-family: inherit; transition: all .2s;
+      background: transparent;
+    }
+    .filter-btn.active { color: var(--white) !important; }
+    .search-input {
+      flex: 1; min-width: 120px; border: 1.5px solid var(--border); border-radius: 20px;
+      padding: 7px 16px; font-size: 13px; font-family: inherit; font-weight: 600;
+      color: var(--text); background: var(--cream); outline: none;
+    }
+
+    /* ── grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px; margin-top: 18px;
+    }
+
+    /* ── card ── */
+    .card {
+      background: var(--white); border-radius: 20px; overflow: hidden;
+      box-shadow: 0 4px 20px #C8A88218; border: 1.5px solid var(--border);
+      display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px #C8A88230; }
+
+    .card-img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover;
+      background: linear-gradient(135deg, var(--latte), var(--blush));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; color: var(--mocha);
+    }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .badge {
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800;
+      color: var(--white); flex-shrink: 0;
+    }
+    .badge.gpt  { background: var(--gptG); }
+    .badge.gemini { background: var(--gemB); }
+    .card-title { font-weight: 800; font-size: 14px; color: var(--text); flex: 1; line-height: 1.4; }
+
+    .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+    .tag {
+      background: var(--blush); color: var(--textLight);
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    }
+
+    .prompt-box {
+      background: var(--cream); border-radius: 10px; padding: 10px 12px;
+      font-size: 12.5px; color: var(--textLight); line-height: 1.6; margin-bottom: 10px;
+      flex: 1; font-family: 'Noto Sans TC', sans-serif; word-break: break-all;
+    }
+
+    .copy-btn {
+      width: 100%; padding: 9px; border-radius: 10px; font-family: inherit;
+      border: 1.5px solid var(--border); background: var(--cream);
+      color: var(--textLight); font-weight: 700; font-size: 13px; cursor: pointer;
+      transition: all .2s;
+    }
+    .copy-btn.copied {
+      border-color: var(--sage); background: var(--sage); color: var(--white);
+    }
+
+    /* ── empty / loading ── */
+    .empty {
+      text-align: center; padding: 60px 24px; color: var(--textLight);
+    }
+    .empty .emoji { font-size: 40px; margin-bottom: 12px; }
+    .empty p { font-weight: 700; font-size: 16px; }
+    .empty small { font-size: 13px; }
+
+    /* ── refresh btn ── */
+    .refresh-btn {
+      margin-top: 20px; padding: 10px 24px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, var(--mocha), var(--dusty));
+      color: var(--white); font-weight: 800; font-size: 14px; cursor: pointer;
+      font-family: inherit; box-shadow: 0 4px 16px #C8A88250;
+    }
+
+    /* ── notice bar ── */
+    .notice {
+      background: var(--blush); border: 1.5px solid var(--dusty);
+      border-radius: 14px; padding: 12px 18px; margin-top: 20px;
+      font-size: 13px; color: var(--textLight); font-weight: 600; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- hero -->
+<div class="hero">
+  <div class="hero-deco deco1"></div>
+  <div class="hero-deco deco2"></div>
+  <div style="position:relative;z-index:1">
+    <p style="font-size:24px;letter-spacing:2px;margin-bottom:8px">✦ ✦ ✦</p>
+    <h1>AI 圖片指令集 🌸</h1>
+    <p>你的專屬 AI 生圖咒語收藏本～隨時更新、隨時使用</p>
+    <p class="count" id="count">載入中...</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="notice">
+    ✦ 指令由管理員持續更新，重新整理頁面即可看到最新內容 🌷
+  </div>
+
+  <!-- filter bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active" id="btn-all"
+      style="border-color:var(--mocha);color:var(--mocha)"
+      onclick="setFilter('all')">全部</button>
+    <button class="filter-btn" id="btn-gpt"
+      style="border-color:var(--gptD);color:var(--gptD)"
+      onclick="setFilter('gpt')">✦ GPT</button>
+    <button class="filter-btn" id="btn-gemini"
+      style="border-color:var(--gemD);color:var(--gemD)"
+      onclick="setFilter('gemini')">◈ Gemini</button>
+    <input class="search-input" id="search" placeholder="🔍 搜尋指令..." oninput="render()" />
+  </div>
+
+  <!-- grid -->
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+  // ── 替換成你的 Sheets ID ──────────────────────────────────────────────
+  const SHEET_ID = "1-GGroP5MUK8XiriMfOw8AAQuMmTWK3r86KPR4bno8Mo";
+  const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&cachebust=${Date.now()}`;
+
+  let allItems = [];
+  let currentFilter = "all";
+
+  // ── parse CSV ──────────────────────────────────────────────────────────
+  function parseCSV(text) {
+    const lines = text.trim().split("\n");
+    if (lines.length < 2) return [];
+    // skip header row
+    return lines.slice(1).map(line => {
+      // handle quoted fields
+      const cols = [];
+      let cur = "", inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ""; }
+        else { cur += ch; }
+      }
+      cols.push(cur.trim());
+      const [title="", prompt="", type="gpt", tags="", image=""] = cols;
+      if (!title || !prompt) return null;
+      return {
+        title,
+        prompt,
+        type: type.toLowerCase().trim() === "gemini" ? "gemini" : "gpt",
+        tags: tags ? tags.split(/[,，]+/).map(t=>t.trim()).filter(Boolean) : [],
+        image: image.trim() || null,
+      };
+    }).filter(Boolean);
+  }
+
+  // ── fetch data ─────────────────────────────────────────────────────────
+  async function fetchData() {
+    const grid = document.getElementById("grid");
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="emoji">🌸</div><p>載入中...</p></div>`;
+    try {
+      const res = await fetch(CSV_URL);
+      if (!res.ok) throw new Error("fetch failed");
+      const text = await res.text();
+      allItems = parseCSV(text);
+      render();
+    } catch(e) {
+      grid.innerHTML = `
+        <div class="empty" style="grid-column:1/-1">
+          <div class="emoji">🌷</div>
+          <p>讀取失敗</p>
+          <small>請確認 Google Sheets 已設定為「知道連結的人可以檢視」</small><br/>
+          <button class="refresh-btn" onclick="fetchData()">重新載入</button>
+        </div>`;
+      document.getElementById("count").textContent = "讀取失敗";
+    }
+  }
+
+  // ── render ─────────────────────────────────────────────────────────────
+  function render() {
+    const search = document.getElementById("search").value.toLowerCase();
+    const filtered = allItems
+      .filter(i => currentFilter === "all" || i.type === currentFilter)
+      .filter(i => !search || i.title.includes(search) || i.prompt.toLowerCase().includes(search) || i.tags.some(t=>t.includes(search)));
+
+    const gptCount    = allItems.filter(i=>i.type==="gpt").length;
+    const geminiCount = allItems.filter(i=>i.type==="gemini").length;
+    document.getElementById("count").textContent =
+      `共 ${allItems.length} 組指令 · GPT ${gptCount} · Gemini ${geminiCount}`;
+
+    // update filter buttons
+    ["all","gpt","gemini"].forEach(k => {
+      const btn = document.getElementById("btn-"+k);
+      if (k === currentFilter) {
+        btn.classList.add("active");
+        btn.style.background = k==="all" ? "var(--mocha)" : k==="gpt" ? "var(--gptD)" : "var(--gemD)";
+        btn.style.color = "var(--white)";
+      } else {
+        btn.classList.remove("active");
+        btn.style.background = "transparent";
+        btn.style.color = k==="all" ? "var(--mocha)" : k==="gpt" ? "var(--gptD)" : "var(--gemD)";
+      }
+    });
+
+    const grid = document.getElementById("grid");
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+        <div class="emoji">🌸</div>
+        <p>${allItems.length===0 ? "還沒有指令" : "找不到符合的指令"}</p>
+        <small>${allItems.length===0 ? "管理員會持續新增，請稍後再來～" : "試試其他關鍵字"}</small>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map((item, idx) => `
+      <div class="card">
+        <div class="card-img">
+          ${item.image
+            ? `<img src="${item.image}" alt="${item.title}" onerror="this.parentNode.innerHTML='<span style=opacity:.4>🌸</span>'" />`
+            : `<span style="opacity:.4">🌸</span>`}
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <span class="badge ${item.type}">${item.type==="gpt" ? "✦ GPT" : "◈ Gemini"}</span>
+            <span class="card-title">${escHtml(item.title)}</span>
+          </div>
+          ${item.tags.length ? `<div class="tags">${item.tags.map(t=>`<span class="tag">#${escHtml(t)}</span>`).join("")}</div>` : ""}
+          <div class="prompt-box">${escHtml(item.prompt)}</div>
+          <button class="copy-btn" id="copy-${idx}" onclick="copyPrompt(${idx}, '${escAttr(item.prompt)}')">
+            複製指令 ✦
+          </button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function setFilter(f) {
+    currentFilter = f;
+    render();
+  }
+
+  function copyPrompt(idx, prompt) {
+    navigator.clipboard.writeText(prompt).then(() => {
+      const btn = document.getElementById("copy-"+idx);
+      btn.textContent = "✓ 已複製！";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "複製指令 ✦";
+        btn.classList.remove("copied");
+      }, 2000);
+    });
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function escAttr(str) {
+    return str.replace(/'/g,"\\'").replace(/\n/g,"\\n");
+  }
+
+  // init
+  fetchData();
+</script>
+</body>
+</html>

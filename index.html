@@ -59,6 +59,9 @@ body{background:var(--bg);font-family:'Noto Sans TC','Nunito',sans-serif;color:v
 /* 正式饅頭人到位後：移除 mantou-placeholder，加 <img class="mantou-img" src="…"> */
 .mantou-placeholder{width:220px;height:220px;border-radius:50%;background:var(--latte);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
 .mantou-placeholder-text{font-size:12px;color:var(--text-muted);font-weight:600;text-align:center;line-height:1.6;}
+.logo-img{height:36px;width:auto;display:block;object-fit:contain;}
+.mantou-img{width:240px;height:auto;display:block;object-fit:contain;}
+.footer-logo-img{height:28px;width:auto;display:block;object-fit:contain;margin:0 auto 12px;}
 
 /* ── BUTTONS ── */
 .btn-primary{padding:12px 24px;border-radius:24px;border:none;background:var(--mocha);color:var(--white);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-block;}
@@ -181,6 +184,7 @@ body{background:var(--bg);font-family:'Noto Sans TC','Nunito',sans-serif;color:v
   .hero-inner{grid-template-columns:1fr;gap:28px;}
   .hero-visual{order:-1;min-height:160px;}
   .mantou-placeholder{width:160px;height:160px;}
+  .mantou-img{width:160px;}
   .header-nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);padding:10px;gap:2px;z-index:99;box-shadow:var(--shadow);}
   .header-nav.open{display:flex;}
   .hamburger{display:flex;}
@@ -201,7 +205,8 @@ body{background:var(--bg);font-family:'Noto Sans TC','Nunito',sans-serif;color:v
         移除 logo-placeholder，改為：
         <img src="Logo網址" alt="果果選物" style="height:36px;width:auto;">
       -->
-      <div class="logo-placeholder">品牌 Logo 預留位置</div>
+      <div class="logo-placeholder" style="display:none">品牌 Logo 預留位置</div>
+      <img src="assets/logo.png" alt="果果選物" class="logo-img">
       <div class="logo-text-wrap">
         <div class="logo-name">果果選物 AI 靈感庫</div>
       </div>
@@ -234,10 +239,7 @@ body{background:var(--bg);font-family:'Noto Sans TC','Nunito',sans-serif;color:v
         移除 mantou-placeholder，改為：
         <img src="饅頭人網址" alt="品牌饅頭人" style="width:240px;height:auto;">
       -->
-      <div class="mantou-placeholder">
-        <div style="font-size:36px;opacity:0.2;">○</div>
-        <div class="mantou-placeholder-text">品牌饅頭人<br>預留位置</div>
-      </div>
+      <img src="assets/mantou.png" alt="果果選物品牌饅頭人" class="mantou-img">
     </div>
   </div>
 </section>
@@ -318,7 +320,7 @@ body{background:var(--bg);font-family:'Noto Sans TC','Nunito',sans-serif;color:v
     正式素材到位後：
     <img src="Logo網址" alt="果果選物" style="height:28px;width:auto;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
   -->
-  <div class="footer-logo-placeholder">品牌 Logo 預留位置</div>
+  <img src="assets/logo.png" alt="果果選物" class="footer-logo-img">
   <div class="footer-brand">果果選物 AI 靈感庫</div>
   <div class="footer-tagline">慢慢收集，持續更新</div>
   <div class="footer-copy">© 果果選物 Gography</div>

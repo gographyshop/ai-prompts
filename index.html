@@ -1,292 +1,781 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI 圖片指令集</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --cream: #FDF8F2; --milk: #FAF3E8; --latte: #EDE0CC; --mocha: #C8A882;
-      --dusty: #E8C5B8; --blush: #F2D9D0; --sage: #C5D5C0; --lavender: #D8D0E8;
-      --text: #5C4A3A; --textLight: #8B7355; --white: #FFFCF8;
-      --gptG: #A8C5A0; --gemB: #A8BDD8; --bothP: #D8D0E8;
-      --gptD: #5A8A52; --gemD: #4A6B8A; --bothD: #7A6A9A;
-      --border: #E5D5C0;
-      --hero: #D9BFA4;
-    }
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, var(--cream) 0%, var(--milk) 40%, var(--blush) 100%);
-      font-family: 'Nunito', 'Noto Sans TC', sans-serif;
-      color: var(--text);
-      padding-bottom: 60px;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>果果選物 AI 靈感庫</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F8F6F3;
+  --white:#FFFFFF;
+  --cream:#F3EEE8;
+  --latte:#EFE4D9;
+  --primary:#D9BFA4;
+  --mocha:#A48977;
+  --mocha-dark:#634D3C;
+  --text:#634D3C;
+  --text-light:#7D6A5C;
+  --text-muted:#9B8C82;
+  --border:#E7DED6;
+  --hero-bg:#F3EEE8;
+  --accent:#DCB0A5;
+  --gpt:#8E9E83;
+  --gpt-light:#EEF1EA;
+  --gem:#9AA8B0;
+  --gem-light:#EFF2F3;
+  --both:#AA9A8E;
+  --both-light:#F2EEEA;
+  --new-color:#DCB0A5;
+  --radius:16px;
+  --shadow:0 2px 16px rgba(99,77,60,0.08);
+  --shadow-hover:0 8px 32px rgba(99,77,60,0.12);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Noto Sans TC','Nunito',sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.7;}
 
-    /* hero */
-    .hero {
-      background: var(--hero);
-      padding: 48px 24px 36px;
-      text-align: center;
-      border-bottom: 2px solid #C8A88230;
-      position: relative;
-      
-    }
-    .hero-deco { position: absolute; border-radius: 50%; opacity: 0.15; pointer-events: none; }
-    .deco1 { width:220px; height:220px; background:#E8C5B8; top:-80px; left:-60px; }
-    .deco2 { width:160px; height:160px; background:#D8D0E8; bottom:-50px; right:-40px; }
-    .hero h1 { font-size: clamp(26px, 6vw, 42px); font-weight: 800; line-height: 1.2; color: var(--text); }
-    .hero p  { font-size: clamp(13px, 3vw, 16px); color: #7A5C42; margin-top: 10px; font-weight: 600; }
-    .hero .count { font-size: 12px; color: #7A5C42; margin-top: 6px; font-weight: 600; }
+/* ── HEADER ── */
+.header{position:sticky;top:0;z-index:100;background:rgba(248,246,243,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;height:60px;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.logo-placeholder{height:36px;padding:0 14px;border-radius:10px;background:var(--latte);border:1.5px dashed var(--border);display:flex;align-items:center;font-size:12px;color:var(--text-muted);font-weight:600;white-space:nowrap;}
+.logo-text-wrap{line-height:1.3;}
+.logo-name{font-size:14px;font-weight:700;color:var(--text);}
+.header-nav{display:flex;gap:4px;margin-left:auto;align-items:center;}
+.nav-link{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;color:var(--text-light);text-decoration:none;transition:all .2s;white-space:nowrap;}
+.nav-link:hover{background:var(--cream);color:var(--text);}
+.hamburger{display:none;background:none;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:6px 10px;color:var(--text);font-size:16px;margin-left:auto;}
 
-    .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+/* ── HERO ── */
+.hero{background:var(--hero-bg);padding:72px 24px 56px;border-bottom:1px solid var(--border);}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:60px;align-items:center;}
+.hero-eyebrow{font-size:11px;letter-spacing:2px;color:var(--mocha);font-weight:700;margin-bottom:16px;}
+.hero-title{font-size:clamp(28px,4.5vw,44px);font-weight:800;line-height:1.15;color:var(--text);margin-bottom:10px;}
+.hero-tagline{font-size:clamp(15px,2vw,18px);font-weight:400;color:var(--text-light);margin-bottom:14px;}
+.hero-desc{font-size:14px;color:var(--text-muted);line-height:1.9;margin-bottom:32px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-visual{display:flex;align-items:center;justify-content:center;min-height:240px;}
+/* 正式饅頭人到位後：移除 mantou-placeholder，加 <img class="mantou-img" src="…"> */
+.mantou-placeholder{width:220px;height:220px;border-radius:50%;background:var(--latte);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.mantou-placeholder-text{font-size:12px;color:var(--text-muted);font-weight:600;text-align:center;line-height:1.6;}
 
-    /* notice */
-    .notice {
-      background: #F5E8DC; border: 1.5px solid #E8D4C0;
-      border-radius: 14px; padding: 12px 18px; margin-top: 20px;
-      font-size: 13px; color: var(--textLight); font-weight: 600; text-align: center;
-    }
+/* ── BUTTONS ── */
+.btn-primary{padding:12px 24px;border-radius:24px;border:none;background:var(--mocha);color:var(--white);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-primary:hover{background:var(--mocha-dark);transform:translateY(-1px);}
+.btn-secondary{padding:12px 24px;border-radius:24px;border:1.5px solid var(--border);background:transparent;color:var(--text-light);font-weight:600;font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn-secondary:hover{background:var(--cream);border-color:var(--mocha);}
 
-    /* filter bar */
-    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 6px; }
-    .filter-btn {
-      padding: 7px 18px; border-radius: 20px; border: 2px solid;
-      font-weight: 700; font-size: 13px; cursor: pointer;
-      font-family: inherit; transition: all .2s; background: transparent;
-    }
-    .search-input {
-      flex: 1; min-width: 120px; border: 1.5px solid var(--border); border-radius: 20px;
-      padding: 7px 16px; font-size: 13px; font-family: inherit; font-weight: 600;
-      color: var(--text); background: var(--cream); outline: none;
-    }
+/* ── SECTIONS ── */
+.section{padding:60px 24px;}
+.section-inner{max-width:1100px;margin:0 auto;}
+.section-cream{background:var(--cream);}
+.section-white{background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.section-title{font-size:clamp(20px,3vw,26px);font-weight:800;color:var(--text);margin-bottom:6px;}
+.section-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px;}
 
-    /* grid */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 18px; }
+/* ── HOW TO ── */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;}
+.step{background:var(--white);border-radius:var(--radius);padding:26px 22px;border:1px solid var(--border);}
+.step-num{font-size:11px;letter-spacing:2px;color:var(--mocha);font-weight:700;margin-bottom:10px;}
+.step-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.step-desc{font-size:13px;color:var(--text-muted);line-height:1.7;}
 
-    /* card */
-    .card {
-      background: var(--white); border-radius: 20px; 
-      box-shadow: 0 4px 20px #C8A88218; border: 1.5px solid var(--border);
-      display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s;
-    }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px #C8A88230; }
+/* ── NOTICE ── */
+.notice-bar{background:var(--latte);border-radius:var(--radius);padding:13px 18px;margin-bottom:24px;font-size:13px;color:var(--text-light);font-weight:600;}
 
-    .card-img {
-      width: 100%;
-      background: linear-gradient(135deg, var(--latte), var(--blush));
-      
-      
-    }
-    .card-img img { width: 100%; height: auto; display: block; }
-    .card-img .default-img { width: 50%; height: auto; display: block; margin: 24px auto; opacity: 0.7; }
+/* ── FILTER ── */
+.search-wrap{position:relative;margin-bottom:20px;}
+.search-input{width:100%;padding:12px 20px 12px 46px;border:1.5px solid var(--border);border-radius:24px;font-size:14px;font-family:inherit;color:var(--text);background:var(--white);outline:none;transition:border-color .2s;}
+.search-input:focus{border-color:var(--mocha);}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none;}
+.filter-label{font-size:11px;color:var(--text-muted);font-weight:700;letter-spacing:1.5px;margin-bottom:10px;text-transform:uppercase;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-chip{padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:transparent;color:var(--text-light);transition:all .2s;}
+.filter-chip:hover{border-color:var(--mocha);color:var(--mocha);}
+.filter-chip.active{background:var(--mocha);border-color:var(--mocha);color:var(--white);}
+.filter-chip.t-gpt.active{background:var(--gpt);border-color:var(--gpt);color:var(--white);}
+.filter-chip.t-gem.active{background:var(--gem);border-color:var(--gem);color:var(--white);}
+.filter-chip.t-both.active{background:var(--both);border-color:var(--both);color:var(--white);}
 
-    .card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
-    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+/* ── MASONRY GRID ── */
+.masonry{columns:3 280px;column-gap:18px;}
+.masonry .card{break-inside:avoid;margin-bottom:18px;}
+@media(max-width:600px){.masonry{columns:1;}}
 
-    .badge {
-      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800;
-      color: var(--white); flex-shrink: 0;
-    }
-    .badge.gpt    { background: var(--gptG); }
-    .badge.gemini { background: var(--gemB); }
-    .badge.both   { background: var(--bothP); color: var(--bothD); }
+/* ── CARD ── */
+.card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;cursor:pointer;display:flex;flex-direction:column;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);}
+.card-img-wrap{width:100%;background:var(--cream);overflow:hidden;}
+/* ✅ 原圖比例，不裁切 */
+.card-img-wrap img{width:100%;height:auto;display:block;}
+.card-img-wrap .img-placeholder{padding:40px 0;text-align:center;font-size:24px;opacity:0.2;color:var(--text-muted);}
+.card-body{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column;}
+.card-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center;}
+.chip{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.chip-cat{background:var(--cream);color:var(--text-light);}
+.chip-gpt{background:var(--gpt-light);color:var(--gpt);}
+.chip-gem{background:var(--gem-light);color:var(--gem);}
+.chip-both{background:var(--both-light);color:var(--both);}
+.chip-new{background:var(--new-color);color:var(--white);}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.4;}
+.card-desc{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;}
+.card-actions{display:flex;gap:8px;margin-top:auto;}
+.btn-copy{flex:1;padding:9px;border-radius:10px;border:none;background:var(--mocha);color:var(--white);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-copy:hover{background:var(--mocha-dark);}
+.btn-copy.copied{background:var(--gpt);}
+.btn-copy.failed{background:var(--accent);color:var(--white);}
+.btn-view{padding:9px 14px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--text-light);font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;}
+.btn-view:hover{background:var(--cream);border-color:var(--mocha);}
 
-    .card-title { font-weight: 800; font-size: 14px; color: var(--text); flex: 1; line-height: 1.4; }
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:52px 24px;color:var(--text-muted);}
+.empty-state p{font-size:15px;font-weight:600;margin-top:10px;}
+.empty-state small{font-size:13px;display:block;margin-top:6px;}
 
-    .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
-    .tag { background: var(--blush); color: var(--textLight); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+/* ── TIPS ── */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+.tip-item{background:var(--white);border-radius:var(--radius);padding:20px;border:1px solid var(--border);}
+.tip-icon{font-size:20px;margin-bottom:8px;}
+.tip-text{font-size:13px;color:var(--text-muted);line-height:1.7;}
 
-    .prompt-box {
-      background: var(--cream); border-radius: 10px; padding: 10px 12px;
-      font-size: 12.5px; color: var(--textLight); line-height: 1.6; margin-bottom: 10px; flex: 1;
-      font-family: 'Noto Sans TC', sans-serif; word-break: break-all;
-    }
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:10px;}
+.faq-item{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+.faq-q{padding:18px 20px;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s;user-select:none;}
+.faq-q:hover{background:var(--cream);}
+.faq-arrow{transition:transform .3s;font-size:12px;color:var(--text-muted);flex-shrink:0;margin-left:12px;}
+.faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;font-size:13px;color:var(--text-muted);line-height:1.8;}
+.faq-item.open .faq-a{max-height:300px;padding:0 20px 18px;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
 
-    .copy-btn {
-      width: 100%; padding: 9px; border-radius: 10px; font-family: inherit;
-      border: 1.5px solid var(--border); background: var(--cream);
-      color: var(--textLight); font-weight: 700; font-size: 13px; cursor: pointer; transition: all .2s;
-    }
-    .copy-btn.copied { border-color: var(--sage); background: var(--sage); color: var(--white); }
+/* ── FOOTER ── */
+.footer{background:var(--latte);border-top:1px solid var(--border);padding:48px 24px 32px;text-align:center;}
+.footer-logo-placeholder{display:inline-block;padding:6px 16px;border-radius:8px;background:var(--cream);border:1.5px dashed var(--border);font-size:12px;color:var(--text-muted);margin-bottom:16px;}
+.footer-brand{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.footer-tagline{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
+.footer-copy{font-size:12px;color:var(--text-muted);}
 
-    .empty { text-align: center; padding: 60px 24px; color: var(--textLight); grid-column: 1/-1; }
-    .empty .emoji { font-size: 40px; margin-bottom: 12px; }
-    .empty p { font-weight: 700; font-size: 16px; }
-    .refresh-btn {
-      margin-top: 20px; padding: 10px 24px; border-radius: 14px; border: none;
-      background: linear-gradient(135deg, var(--mocha), var(--dusty));
-      color: var(--white); font-weight: 800; font-size: 14px; cursor: pointer; font-family: inherit;
-    }
-  </style>
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(99,77,60,0.45);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:20px;width:100%;max-width:580px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(99,77,60,0.18);transform:translateY(20px);transition:transform .25s;position:relative;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-close{position:sticky;top:0;float:right;margin:14px 14px -14px 0;background:var(--cream);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:var(--text-light);display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:1;}
+.modal-close:hover{background:var(--latte);}
+.modal-img{width:100%;height:auto;display:block;background:var(--cream);}
+.modal-body{padding:22px 24px 28px;}
+.modal-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.modal-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.3;}
+.modal-desc{font-size:14px;color:var(--text-muted);margin-bottom:20px;line-height:1.7;}
+.modal-label{font-size:11px;letter-spacing:1.5px;font-weight:700;color:var(--mocha);margin-bottom:8px;text-transform:uppercase;}
+/* ✅ white-space:pre-wrap 保留換行與空白行 */
+.modal-prompt{background:var(--cream);border-radius:12px;padding:16px;font-size:13px;color:var(--text-light);line-height:1.9;white-space:pre-wrap;word-break:break-word;margin-bottom:16px;font-family:'Noto Sans TC',sans-serif;max-height:300px;overflow-y:auto;}
+.modal-tips{background:var(--latte);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:20px;white-space:pre-wrap;word-break:break-word;}
+.modal-actions{display:flex;gap:10px;}
+.modal-actions .btn-copy{font-size:14px;padding:12px;}
+.modal-actions .btn-secondary{font-size:14px;padding:12px 18px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .hero-inner{grid-template-columns:1fr;gap:28px;}
+  .hero-visual{order:-1;min-height:160px;}
+  .mantou-placeholder{width:160px;height:160px;}
+  .header-nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);padding:10px;gap:2px;z-index:99;box-shadow:var(--shadow);}
+  .header-nav.open{display:flex;}
+  .hamburger{display:flex;}
+  .card-actions{flex-direction:column;}
+  .modal-actions{flex-direction:column;}
+  .modal{max-height:95vh;}
+}
+</style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-deco deco1"></div>
-  <div class="hero-deco deco2"></div>
-  <div style="position:relative;z-index:1">
-    <p style="font-size:24px;letter-spacing:2px;margin-bottom:8px"></p>
-    <h1>AI 圖片指令集</h1>
-    <p>你準備的生圖咒語收藏本｜隨時打開，都能找到靈感</p>
-    <p class="count" id="count">載入中...</p>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <!--
+        正式 Logo 到位後：
+        移除 logo-placeholder，改為：
+        <img src="Logo網址" alt="果果選物" style="height:36px;width:auto;">
+      -->
+      <div class="logo-placeholder">品牌 Logo 預留位置</div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">果果選物 AI 靈感庫</div>
+      </div>
+    </a>
+    <nav class="header-nav" id="main-nav">
+      <a href="#explore" class="nav-link" onclick="closeNav()">找找靈感</a>
+      <a href="#how-to" class="nav-link" onclick="closeNav()">怎麼開始使用</a>
+      <a href="#faq" class="nav-link" onclick="closeNav()">常見問題</a>
+    </nav>
+    <button class="hamburger" onclick="toggleNav()" aria-label="選單">☰</button>
   </div>
-</div>
+</header>
 
-<div class="container">
-  <div class="notice">✦ 指令由管理員持續更新，重新整理頁面即可看到最新內容 ☀</div>
-
-  <div class="filter-bar">
-    <button class="filter-btn" id="btn-all"    style="border-color:var(--mocha);color:var(--mocha)"  onclick="setFilter('all')">全部</button>
-    <button class="filter-btn" id="btn-gpt"    style="border-color:var(--gptD);color:var(--gptD)"   onclick="setFilter('gpt')">✦ GPT</button>
-    <button class="filter-btn" id="btn-gemini" style="border-color:var(--gemD);color:var(--gemD)"   onclick="setFilter('gemini')">◈ Gemini</button>
-    <button class="filter-btn" id="btn-both"   style="border-color:var(--bothD);color:var(--bothD)" onclick="setFilter('both')">GPT/GEMINI</button>
-    <input class="search-input" id="search" placeholder="🔍 搜尋指令..." oninput="render()" />
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Gography AI Library</div>
+      <h1 class="hero-title">AI 靈感庫</h1>
+      <div class="hero-tagline">慢慢收集，持續更新</div>
+      <p class="hero-desc">把喜歡的畫面收藏起來，<br>也把可以直接開始創作的指令整理給你。</p>
+      <div class="hero-btns">
+        <a href="#explore" class="btn-primary">找找今天的靈感</a>
+        <a href="#how-to" class="btn-secondary">怎麼開始使用</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <!--
+        正式饅頭人到位後：
+        移除 mantou-placeholder，改為：
+        <img src="饅頭人網址" alt="品牌饅頭人" style="width:240px;height:auto;">
+      -->
+      <div class="mantou-placeholder">
+        <div style="font-size:36px;opacity:0.2;">○</div>
+        <div class="mantou-placeholder-text">品牌饅頭人<br>預留位置</div>
+      </div>
+    </div>
   </div>
+</section>
 
-  <div class="grid" id="grid"></div>
+<!-- HOW TO -->
+<section class="section section-cream" id="how-to">
+  <div class="section-inner">
+    <h2 class="section-title">怎麼開始使用？</h2>
+    <p class="section-sub">三個步驟，馬上開始</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><div class="step-title">挑一個喜歡的靈感</div><div class="step-desc">從圖片、風格或主題開始慢慢逛。</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-title">複製完整指令</div><div class="step-desc">找到喜歡的畫面後，複製對應的完整指令內容。</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-title">貼到 AI 工具開始創作</div><div class="step-desc">可依自己的需求調整人物、背景、服裝或顏色。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED（JS 動態插入，無資料時完全不顯示） -->
+<div id="featured-section"></div>
+
+<!-- EXPLORE -->
+<section class="section" id="explore" style="padding-bottom:16px;">
+  <div class="section-inner">
+    <h2 class="section-title">找找今天的靈感</h2>
+    <p class="section-sub">依風格慢慢逛，找到喜歡的就複製開始玩</p>
+    <div class="notice-bar">✦ 指令由管理員持續更新，重新整理頁面即可看到最新內容 ☀</div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="search" placeholder="找找今天想生成的畫面…"/>
+    </div>
+    <div class="filter-label">依主題慢慢逛</div>
+    <div class="filter-row" id="cat-filters"></div>
+    <div class="filter-label">適用工具</div>
+    <div class="filter-row" id="type-filters"></div>
+  </div>
+</section>
+
+<!-- CARD GRID -->
+<section class="section" style="padding-top:20px;">
+  <div class="section-inner">
+    <div class="masonry" id="grid">
+      <div class="empty-state"><p>載入中…</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="section section-cream" id="tips">
+  <div class="section-inner">
+    <h2 class="section-title">第一次使用，也可以慢慢玩</h2>
+    <p class="section-sub">AI 每次生成的畫面都會有些不同，從喜歡的示意圖開始就好。</p>
+    <div class="tips-grid">
+      <div class="tip-item"><div class="tip-icon">📷</div><div class="tip-text">人像照片盡量選擇清楚、正面、光線均勻的照片</div></div>
+      <div class="tip-item"><div class="tip-icon">🔄</div><div class="tip-text">一次結果不一定最理想，可多生成幾次後挑選</div></div>
+      <div class="tip-item"><div class="tip-icon">✏️</div><div class="tip-text">想換服裝、背景或場景時，可直接修改 Prompt 內容</div></div>
+      <div class="tip-item"><div class="tip-icon">🗂</div><div class="tip-text">靈感庫會持續更新，可以之後再回來慢慢逛</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-inner">
+    <h2 class="section-title">常見問題</h2>
+    <div style="margin-bottom:24px;"></div>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q">複製後可以直接使用嗎？<span class="faq-arrow">▼</span></div><div class="faq-a">可以，複製後貼到對應的 AI 工具即可開始使用。</div></div>
+      <div class="faq-item"><div class="faq-q">為什麼生成結果和示意圖不完全一樣？<span class="faq-arrow">▼</span></div><div class="faq-a">AI 會依使用的照片、平台模型、文字內容與每次生成結果產生不同畫面。</div></div>
+      <div class="faq-item"><div class="faq-q">可以修改指令內容嗎？<span class="faq-arrow">▼</span></div><div class="faq-a">可以，可依需求調整人物、服裝、場景、色調或物件描述。</div></div>
+      <div class="faq-item"><div class="faq-q">找不到想要的風格怎麼辦？<span class="faq-arrow">▼</span></div><div class="faq-a">靈感庫會持續更新，可以之後再回來慢慢逛。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <!--
+    正式素材到位後：
+    <img src="Logo網址" alt="果果選物" style="height:28px;width:auto;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+  -->
+  <div class="footer-logo-placeholder">品牌 Logo 預留位置</div>
+  <div class="footer-brand">果果選物 AI 靈感庫</div>
+  <div class="footer-tagline">慢慢收集，持續更新</div>
+  <div class="footer-copy">© 果果選物 Gography</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" id="modal-close-btn">×</button>
+    <img id="modal-img" src="" alt="" class="modal-img" style="display:none"/>
+    <div class="modal-body">
+      <div class="modal-chips" id="modal-chips"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-label">完整指令</div>
+      <div class="modal-prompt" id="modal-prompt"></div>
+      <div id="modal-tips-wrap" style="display:none">
+        <div class="modal-label">使用提醒</div>
+        <div class="modal-tips" id="modal-tips"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-copy" id="modal-copy-btn">複製這段指令</button>
+        <button class="btn-secondary" id="modal-close-btn2">關閉</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-  const SHEET_ID    = "1-GGroP5MUK8XiriMfOw8AAQuMmTWK3r86KPR4bno8Mo";
-  const CSV_URL     = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&cachebust=${Date.now()}`;
-  const DEFAULT_IMG = "https://drive.google.com/uc?export=view&id=1Uh9eUgp4REhW7Gvra0sNHwgaxntO0c-Y";
+/* ═══════════════════════════════════════════
+   設定
+═══════════════════════════════════════════ */
+const SHEET_ID    = "1-GGroP5MUK8XiriMfOw8AAQuMmTWK3r86KPR4bno8Mo";
+const CSV_URL     = "https://docs.google.com/spreadsheets/d/"
+                  + SHEET_ID + "/export?format=csv&cachebust=" + Date.now();
+const FEATURED_MAX = 6;
+const DEFAULT_CATS = [
+  "全部靈感","人像寫真","親子日常","可愛插畫",
+  "商品情境","節慶主題","背景場景","社群素材","其他收藏"
+];
+const TYPE_LABEL = { gpt:"GPT", gemini:"Gemini", both:"GPT / Gemini" };
+const TYPE_CHIP  = { gpt:"chip-gpt", gemini:"chip-gem", both:"chip-both" };
 
-  let allItems = [];
-  let currentFilter = "all";
+let allItems        = [];
+let visibleItems    = [];
+let currentCat      = "全部靈感";
+let currentType     = "all";
+let modalPromptText = "";
 
-  // ── parse CSV ──────────────────────────────────────────────────────────
-  function parseCSV(text) {
-    const lines = text.trim().split("\n");
-    if (lines.length < 2) return [];
-    return lines.slice(1).map(line => {
-      const cols = [];
-      let cur = "", inQ = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') { inQ = !inQ; }
-        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ""; }
-        else { cur += ch; }
+/* ═══════════════════════════════════════════
+   CSV 解析
+   ✅ BOM 移除
+   ✅ 多行儲存格（Google Sheets 雙引號包裹格式）
+   ✅ 內部 "" 跳脫
+═══════════════════════════════════════════ */
+function parseCSV(raw) {
+  if (raw.charCodeAt(0) === 0xFEFF) raw = raw.slice(1);
+  const rows = [];
+  let i = 0, n = raw.length;
+  while (i < n) {
+    const row = [];
+    while (i < n) {
+      let cell = "";
+      if (raw[i] === '"') {
+        i++;
+        while (i < n) {
+          if (raw[i] === '"') {
+            if (i + 1 < n && raw[i + 1] === '"') { cell += '"'; i += 2; }
+            else { i++; break; }
+          } else { cell += raw[i++]; }
+        }
+      } else {
+        while (i < n && raw[i] !== ',' && raw[i] !== '\n' && raw[i] !== '\r') {
+          cell += raw[i++];
+        }
+        cell = cell.trim();
       }
-      cols.push(cur.trim());
-      const [title="", prompt="", type="gpt", tags="", image=""] = cols;
-      if (!title || !prompt) return null;
-      const t = type.toLowerCase().trim();
-      const normalizedType = t === "gemini" ? "gemini" : t === "both" || t === "GPT/GEMINI" || t === "both" ? "both" : "gpt";
+      row.push(cell);
+      if (i < n && raw[i] === ',') { i++; continue; }
+      break;
+    }
+    while (i < n && (raw[i] === '\r' || raw[i] === '\n')) i++;
+    if (row.some(c => c !== '')) rows.push(row);
+  }
+  return rows;
+}
+
+/* ═══════════════════════════════════════════
+   資料載入
+═══════════════════════════════════════════ */
+async function fetchData() {
+  try {
+    const res = await fetch(CSV_URL);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if (rows.length < 2) { renderGrid([]); return; }
+
+    // ✅ BOM 雙重保險 + 正規化欄位名稱
+    const headers = rows[0].map(h =>
+      h.replace(/^\uFEFF/, '').trim().toLowerCase().replace(/\s/g, '')
+    );
+    const col = k => headers.indexOf(k);
+
+    const C = {
+      title:       col("title"),
+      prompt:      col("prompt"),
+      type:        col("type"),
+      tags:        col("tags"),
+      image:       col("image"),
+      description: col("description"),
+      category:    col("category"),
+      photoTips:   col("phototips"),
+      featured:    col("featured"),
+      isNew:       col("isnew"),
+      sort:        col("sort"),
+      status:      col("status"),
+    };
+
+    const isTruthy = v => ["true","1","yes"].includes(
+      String(v).toLowerCase().trim()
+    );
+
+    allItems = rows.slice(1).map(r => {
+      const g = idx => (idx >= 0 && idx < r.length) ? r[idx] : "";
+
+      // ✅ status 空白 = 顯示
+      const status = g(C.status).toLowerCase().trim();
+      if (status === "inactive") return null;
+
+      const title = g(C.title).trim();
+      if (!title) return null;
+
+      const rawType = g(C.type).toLowerCase().trim();
+      const type = rawType === "gemini" ? "gemini"
+                 : rawType === "both"   ? "both"
+                 : "gpt";
+
       return {
         title,
-        prompt,
-        type: normalizedType,
-        tags: tags ? tags.split(/[,，]+/).map(t=>t.trim()).filter(Boolean) : [],
-        image: image.trim() || null,
+        prompt:      g(C.prompt),   // ✅ 原始字串，保留所有換行
+        type,
+        tags:        g(C.tags).split(/[,，]+/).map(s => s.trim()).filter(Boolean),
+        image:       g(C.image).trim(),
+        description: g(C.description).trim(),
+        category:    g(C.category).trim() || "其他收藏",
+        photoTips:   g(C.photoTips).trim(),
+        featured:    isTruthy(g(C.featured)),
+        isNew:       isTruthy(g(C.isNew)),
+        sort:        parseInt(g(C.sort)) || 999,
       };
-    }).filter(Boolean);
+    }).filter(Boolean).sort((a, b) => a.sort - b.sort);
+
+    buildFeatured();
+    buildCatFilters();
+    buildTypeFilters();
+    applyFilters();
+  } catch(e) {
+    document.getElementById("grid").innerHTML =
+      '<div class="empty-state"><p>讀取失敗</p>' +
+      '<small>請確認 Google Sheets 已設定為公開檢視，再重新整理頁面。</small></div>';
   }
+}
 
-  // ── fetch ──────────────────────────────────────────────────────────────
-  async function fetchData() {
-    document.getElementById("grid").innerHTML = `<div class="empty"><p>載入中...</p></div>`;
-    try {
-      const res = await fetch(CSV_URL);
-      if (!res.ok) throw new Error();
-      allItems = parseCSV(await res.text());
-      render();
-    } catch {
-      document.getElementById("grid").innerHTML = `
-        <div class="empty">
-          <p>讀取失敗</p>
-          <small>請確認 Google Sheets 已設定為公開檢視</small><br/>
-          <button class="refresh-btn" onclick="fetchData()">重新載入</button>
-        </div>`;
-      document.getElementById("count").textContent = "讀取失敗";
-    }
+/* ═══════════════════════════════════════════
+   精選區
+   ✅ 無 featured 資料時整區不顯示
+═══════════════════════════════════════════ */
+function buildFeatured() {
+  const wrap = document.getElementById("featured-section");
+  const featured = allItems.filter(i => i.featured).slice(0, FEATURED_MAX);
+  if (!featured.length) { wrap.innerHTML = ""; return; }
+
+  const section = document.createElement("section");
+  section.className = "section section-white";
+
+  const inner = document.createElement("div");
+  inner.className = "section-inner";
+
+  const h2 = document.createElement("h2");
+  h2.className = "section-title";
+  h2.textContent = "最近收進來的靈感";
+  inner.appendChild(h2);
+
+  const sub = document.createElement("p");
+  sub.className = "section-sub";
+  sub.textContent = "最近新增的畫面與指令，慢慢挑一個喜歡的開始玩。";
+  inner.appendChild(sub);
+
+  const grid = document.createElement("div");
+  grid.className = "masonry";
+  featured.forEach(item => grid.appendChild(buildCard(item)));
+  inner.appendChild(grid);
+
+  section.appendChild(inner);
+  wrap.innerHTML = "";
+  wrap.appendChild(section);
+}
+
+/* ═══════════════════════════════════════════
+   分類篩選
+   ✅ addEventListener，不插入 onclick 字串
+═══════════════════════════════════════════ */
+function buildCatFilters() {
+  const used = new Set(allItems.map(i => i.category));
+  const cats = ["全部靈感",
+    ...DEFAULT_CATS.filter(c => c !== "全部靈感" && used.has(c))
+  ];
+  used.forEach(c => { if (!DEFAULT_CATS.includes(c)) cats.push(c); });
+
+  const wrap = document.getElementById("cat-filters");
+  wrap.innerHTML = "";
+  cats.forEach(c => {
+    const btn = document.createElement("button");
+    btn.className = "filter-chip" + (c === currentCat ? " active" : "");
+    btn.textContent = c;
+    btn.addEventListener("click", () => setCat(c));
+    wrap.appendChild(btn);
+  });
+}
+
+function buildTypeFilters() {
+  const wrap = document.getElementById("type-filters");
+  wrap.innerHTML = "";
+  [
+    { key:"all",    label:"全部工具",           cls:"" },
+    { key:"gpt",    label:"GPT",               cls:"t-gpt" },
+    { key:"gemini", label:"Gemini",            cls:"t-gem" },
+    { key:"both",   label:"GPT / Gemini 都可", cls:"t-both" },
+  ].forEach(t => {
+    const btn = document.createElement("button");
+    btn.className = "filter-chip"
+      + (t.cls ? " " + t.cls : "")
+      + (t.key === currentType ? " active" : "");
+    btn.id = "type-" + t.key;
+    btn.textContent = t.label;
+    btn.addEventListener("click", () => setType(t.key));
+    wrap.appendChild(btn);
+  });
+}
+
+function setCat(c)  { currentCat  = c; buildCatFilters();  applyFilters(); }
+function setType(t) { currentType = t; buildTypeFilters(); applyFilters(); }
+
+/* ═══════════════════════════════════════════
+   篩選 + 渲染
+═══════════════════════════════════════════ */
+function applyFilters() {
+  const q = document.getElementById("search").value.toLowerCase();
+  visibleItems = allItems
+    .filter(i => currentCat === "全部靈感" || i.category === currentCat)
+    .filter(i => currentType === "all" || i.type === currentType)
+    .filter(i => !q ||
+      i.title.toLowerCase().includes(q) ||
+      i.description.toLowerCase().includes(q) ||
+      i.prompt.toLowerCase().includes(q) ||
+      i.category.toLowerCase().includes(q) ||
+      i.tags.some(t => t.toLowerCase().includes(q))
+    );
+  renderGrid(visibleItems);
+}
+
+function renderGrid(items) {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  if (!items.length) {
+    const el = document.createElement("div");
+    el.className = "empty-state";
+    el.innerHTML = "<p>這裡暫時還沒有找到相符的靈感</p>"
+                 + "<small>試試其他關鍵字，或等我們慢慢更新</small>";
+    grid.appendChild(el);
+    return;
   }
+  items.forEach(item => grid.appendChild(buildCard(item)));
+}
 
-  // ── render ─────────────────────────────────────────────────────────────
-  function render() {
-    const search = document.getElementById("search").value.toLowerCase();
-    const filtered = allItems
-      .filter(i => currentFilter === "all" || i.type === currentFilter)
-      .filter(i => !search || i.title.includes(search) || i.prompt.toLowerCase().includes(search) || i.tags.some(t=>t.includes(search)));
+/* ═══════════════════════════════════════════
+   建立卡片 DOM
+   ✅ 圖片保留原比例，不裁切
+   ✅ description 空白時不顯示
+═══════════════════════════════════════════ */
+function buildCard(item) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.addEventListener("click", () => openModal(item));
 
-    const gptCount  = allItems.filter(i=>i.type==="gpt").length;
-    const gemCount  = allItems.filter(i=>i.type==="gemini").length;
-    const bothCount = allItems.filter(i=>i.type==="both").length;
-    document.getElementById("count").textContent =
-      `共 ${allItems.length} 組指令 · GPT ${gptCount} · Gemini ${gemCount} · GPT/GEMINI ${bothCount}`;
-
-    // filter buttons
-    const configs = {
-      all:    { color: "var(--mocha)",  bg: "var(--mocha)" },
-      gpt:    { color: "var(--gptD)",   bg: "var(--gptD)" },
-      gemini: { color: "var(--gemD)",   bg: "var(--gemD)" },
-      both:   { color: "var(--bothD)",  bg: "var(--bothP)" },
+  // 圖片
+  const imgWrap = document.createElement("div");
+  imgWrap.className = "card-img-wrap";
+  if (item.image) {
+    const img = document.createElement("img");
+    img.src = item.image;
+    img.alt = item.title;
+    img.loading = "lazy";
+    img.onerror = () => {
+      imgWrap.innerHTML = '<div class="img-placeholder">—</div>';
     };
-    Object.entries(configs).forEach(([key, { color, bg }]) => {
-      const btn = document.getElementById("btn-" + key);
-      if (key === currentFilter) {
-        btn.style.background = bg;
-        btn.style.color = key === "both" ? "var(--bothD)" : "var(--white)";
-        btn.style.borderColor = color;
-      } else {
-        btn.style.background = "transparent";
-        btn.style.color = color;
-        btn.style.borderColor = color;
-      }
-    });
+    imgWrap.appendChild(img);
+  } else {
+    imgWrap.innerHTML = '<div class="img-placeholder">—</div>';
+  }
+  card.appendChild(imgWrap);
 
-    const grid = document.getElementById("grid");
-    if (filtered.length === 0) {
-      grid.innerHTML = `<div class="empty">
-        
-        <p>${allItems.length===0 ? "還沒有指令" : "找不到符合的指令"}</p>
-        <small>${allItems.length===0 ? "管理員會持續新增，請稍後再來～" : "試試其他關鍵字"}</small>
-      </div>`;
-      return;
-    }
+  // body
+  const body = document.createElement("div");
+  body.className = "card-body";
 
-    const badgeLabel = { gpt: "✦ GPT", gemini: "◈ Gemini", both: "GPT/GEMINI" };
+  const chips = document.createElement("div");
+  chips.className = "card-chips";
+  chips.appendChild(makeChip("chip-cat", item.category));
+  chips.appendChild(makeChip(TYPE_CHIP[item.type], TYPE_LABEL[item.type]));
+  if (item.isNew) chips.appendChild(makeChip("chip-new", "NEW"));
+  body.appendChild(chips);
 
-    grid.innerHTML = filtered.map((item, idx) => `
-      <div class="card">
-        <div class="card-img">
-          ${item.image
-            ? `<img src="${item.image}" alt="${escHtml(item.title)}" onerror="this.src='${DEFAULT_IMG}'" />`
-            : `<img class="default-img" src="${DEFAULT_IMG}" alt="預設圖示" onerror="this.style.display='none'" />`}
-        </div>
-        <div class="card-body">
-          <div class="card-header">
-            <span class="badge ${item.type}">${badgeLabel[item.type] || "✦ GPT"}</span>
-            <span class="card-title">${escHtml(item.title)}</span>
-          </div>
-          ${item.tags.length ? `<div class="tags">${item.tags.map(t=>`<span class="tag">#${escHtml(t)}</span>`).join("")}</div>` : ""}
-          <div class="prompt-box">${escHtml(item.prompt)}</div>
-          <button class="copy-btn" id="copy-${idx}" onclick="copyPrompt(${idx}, \`${escJs(item.prompt)}\`)">複製指令 ✦</button>
-        </div>
-      </div>
-    `).join("");
+  const title = document.createElement("div");
+  title.className = "card-title";
+  title.textContent = item.title;
+  body.appendChild(title);
+
+  if (item.description) {
+    const desc = document.createElement("div");
+    desc.className = "card-desc";
+    desc.textContent = item.description;
+    body.appendChild(desc);
   }
 
-  function setFilter(f) { currentFilter = f; render(); }
+  const actions = document.createElement("div");
+  actions.className = "card-actions";
 
-  function copyPrompt(idx, prompt) {
-    navigator.clipboard.writeText(prompt).then(() => {
-      const btn = document.getElementById("copy-"+idx);
-      btn.textContent = "✓ 已複製！";
-      btn.classList.add("copied");
-      setTimeout(() => { btn.textContent = "複製指令 ✦"; btn.classList.remove("copied"); }, 2000);
-    });
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "btn-copy";
+  copyBtn.textContent = "複製這段指令";
+  copyBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    doCopy(item.prompt, copyBtn);
+  });
+
+  const viewBtn = document.createElement("button");
+  viewBtn.className = "btn-view";
+  viewBtn.textContent = "查看指令";
+  viewBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    openModal(item);
+  });
+
+  actions.appendChild(copyBtn);
+  actions.appendChild(viewBtn);
+  body.appendChild(actions);
+  card.appendChild(body);
+  return card;
+}
+
+function makeChip(cls, text) {
+  const span = document.createElement("span");
+  span.className = "chip " + cls;
+  span.textContent = text;
+  return span;
+}
+
+/* ═══════════════════════════════════════════
+   複製
+   ✅ 成功提示
+   ✅ 失敗提示（不讓按鈕沒反應）
+═══════════════════════════════════════════ */
+function doCopy(text, btn) {
+  const origText = "複製這段指令";
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = "✓ 已複製！";
+    btn.classList.add("copied");
+    btn.classList.remove("failed");
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.classList.remove("copied");
+    }, 2000);
+  }).catch(() => {
+    // ✅ 複製失敗提示
+    btn.textContent = "複製失敗，請長按手動複製";
+    btn.classList.add("failed");
+    btn.classList.remove("copied");
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.classList.remove("failed");
+    }, 3000);
+  });
+}
+
+/* ═══════════════════════════════════════════
+   Modal
+   ✅ textContent 保留換行
+   ✅ white-space:pre-wrap 顯示段落
+═══════════════════════════════════════════ */
+function openModal(item) {
+  modalPromptText = item.prompt;
+
+  const imgEl = document.getElementById("modal-img");
+  if (item.image) {
+    imgEl.src = item.image;
+    imgEl.style.display = "block";
+    imgEl.onerror = () => { imgEl.style.display = "none"; };
+  } else {
+    imgEl.style.display = "none";
   }
 
-  function escHtml(s) {
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-  function escJs(s) {
-    return String(s).replace(/\\/g,"\\\\").replace(/`/g,"\\`").replace(/\$/g,"\\$");
+  const chipsEl = document.getElementById("modal-chips");
+  chipsEl.innerHTML = "";
+  chipsEl.appendChild(makeChip("chip-cat", item.category));
+  chipsEl.appendChild(makeChip(TYPE_CHIP[item.type], TYPE_LABEL[item.type]));
+  if (item.isNew) chipsEl.appendChild(makeChip("chip-new", "NEW"));
+
+  document.getElementById("modal-title").textContent  = item.title;
+  document.getElementById("modal-desc").textContent   = item.description;
+  document.getElementById("modal-prompt").textContent = item.prompt; // ✅ 保留換行
+
+  const tipsWrap = document.getElementById("modal-tips-wrap");
+  if (item.photoTips) {
+    document.getElementById("modal-tips").textContent = item.photoTips;
+    tipsWrap.style.display = "block";
+  } else {
+    tipsWrap.style.display = "none";
   }
 
-  fetchData();
+  const copyBtn = document.getElementById("modal-copy-btn");
+  copyBtn.textContent = "複製這段指令";
+  copyBtn.classList.remove("copied", "failed");
+
+  document.getElementById("modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+/* ═══════════════════════════════════════════
+   事件綁定
+═══════════════════════════════════════════ */
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target === document.getElementById("modal")) closeModal();
+});
+document.getElementById("modal-close-btn").addEventListener("click",  closeModal);
+document.getElementById("modal-close-btn2").addEventListener("click", closeModal);
+document.getElementById("modal-copy-btn").addEventListener("click", () => {
+  doCopy(modalPromptText, document.getElementById("modal-copy-btn"));
+});
+document.getElementById("search").addEventListener("input", applyFilters);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+document.querySelectorAll(".faq-q").forEach(q => {
+  q.addEventListener("click", () => q.parentElement.classList.toggle("open"));
+});
+
+function toggleNav() { document.getElementById("main-nav").classList.toggle("open"); }
+function closeNav()  { document.getElementById("main-nav").classList.remove("open"); }
+
+/* ── 啟動 ── */
+fetchData();
 </script>
 </body>
 </html>
